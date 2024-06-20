@@ -1,0 +1,11 @@
+CREATE TABLE StoreDetails (
+    StoreID UNIQUEIDENTIFIER  PRIMARY KEY,
+    StoreName NVARCHAR(50) NOT NULL,
+    Street NVARCHAR(120) NOT NULL,
+    City NVARCHAR(50) NOT NULL,
+    [State] NVARCHAR(2) NOT NULL,
+    ZipCode NVARCHAR(5),
+    PhoneNumber NVARCHAR(14),
+	RegistrationDate DATE,
+	ActiveStatus BIT
+);

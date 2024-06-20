@@ -27,5 +27,24 @@ namespace Delivery.APIService.Extensions
             }
             return drivers;
         }
+        public static List<CustomerAPIServiceDTO> CustomerRepositoryDTOsToCustomerAPIServiceDTOs(this List<CustomerRepositoryDTO> customerRepositoryDTOs)
+        {
+            List<CustomerAPIServiceDTO> customers = new List<CustomerAPIServiceDTO>();
+
+            foreach (var customerRepositoryDTO in customerRepositoryDTOs)
+            {
+                CustomerAPIServiceDTO customer = new CustomerAPIServiceDTO()
+                {
+                    CustomerID = customerRepositoryDTO.CustomerID,
+                    City = customerRepositoryDTO.City,
+                    FirstName = customerRepositoryDTO.FirstName,
+                    LastName = customerRepositoryDTO.LastName,
+                    MobileNumber = customerRepositoryDTO.MobileNumber,
+                };
+
+                customers.Add(customer);
+            }
+            return customers;
+        }
     }
 }
