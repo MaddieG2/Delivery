@@ -1,6 +1,8 @@
 ﻿using Delivery.APIService;
+using Delivery.APIService.DTO;
 using Delivery.APIService.Models;
 using Delivery.Models;
+using Delivery.Repository.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -22,10 +24,13 @@ namespace Delivery.Controllers
         }
 
         [HttpGet]
-        [Route("GetStoresByCity")]
-        public List<string> GetStoresByCity(string city)
+        [Route("GetStores")]
+        public List<StoreDetailAPIServiceDTO> GetStores(string city = "")
         {
-            return new List<string> {""};
+           StoreService storeService = new StoreService(_configuration);
+           List<StoreDetailAPIServiceDTO> stores = storeService.GetStores(city);
+
+           return stores;
         }
 
         [HttpPost] //Create action - new resource is added. 

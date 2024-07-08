@@ -2,6 +2,7 @@
 using Delivery.Repository.DTO;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Delivery.APIService.Extensions
@@ -46,5 +47,28 @@ namespace Delivery.APIService.Extensions
             }
             return customers;
         }
-    }
+            public static List<StoreDetailAPIServiceDTO> StoreDetailRepositoryDTOsToStoreDetailAPIServiceDTO(this List<StoreDetailRepositoryDTO> storeDetailRepositoryDTOs)
+            {
+                List<StoreDetailAPIServiceDTO> stores = new List<StoreDetailAPIServiceDTO>();
+
+                foreach (var storeDetailRepositoryDTO in storeDetailRepositoryDTOs)
+                {
+                StoreDetailAPIServiceDTO store = new StoreDetailAPIServiceDTO()
+                    {
+                    StoreId = storeDetailRepositoryDTO.StoreId,
+                    StoreName = storeDetailRepositoryDTO.StoreName,
+                    Street = storeDetailRepositoryDTO.Street,
+                    City = storeDetailRepositoryDTO.City,
+                    State = storeDetailRepositoryDTO.State,
+                    ZipCode = storeDetailRepositoryDTO.ZipCode,
+                    PhoneNumber = storeDetailRepositoryDTO.PhoneNumber,
+                    RegistrationDate = storeDetailRepositoryDTO.RegistrationDate,
+                    ActiveStatus = storeDetailRepositoryDTO.ActiveStatus,
+                };
+
+                    stores.Add(store);
+                }
+                return stores;
+            }
+        }
 }
