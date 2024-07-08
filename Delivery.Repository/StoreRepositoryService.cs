@@ -14,12 +14,52 @@ namespace Delivery.Repository
         {
             _configuration = configuration;
         }
+
+        public List<StoreDetailRepositoryDTO> GetStores(string city = "")
+        {
+            List<StoreDetailRepositoryDTO> stores = new List<StoreDetailRepositoryDTO>();
+            String connectionString = _configuration.GetConnectionString("DeliveryDB");
+            string query = "";
+            if(city != "")
+            {
+                query = $"SELECT * FROM StoreDetails WHERE city = '{city}'";
+            }
+            else
+            {
+                query = "SELECT * FROM StoreDetails";
+            }
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var store = new StoreDetailRepositoryDTO
+                        {
+                            StoreId = (Guid)reader["StoreId"],
+                            StoreName = (string)reader["StoreName"],
+                            Street = (string)reader["Street"],
+                            City = (string)reader["City"],
+                            ZipCode = Int32.Parse((string)reader["ZipCode"]),
+                            PhoneNumber = (string)reader["PhoneNumber"],
+                            RegistrationDate = (DateTime)reader["RegistrationDate"],
+                            ActiveStatus = (bool)reader["ActiveStatus"]
+                        };
+                        stores.Add(store);
+                    }
+                }
+                return stores;
+            }
+        }
         public void CreateStore(StoreDetailRepositoryDTO storeDetails)
         {
             //This should write to the DB
             var connectionString = _configuration.GetConnectionString("DeliveryDB");
 
-            using(SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
@@ -39,9 +79,10 @@ namespace Delivery.Repository
                     new SqlParameter("registrationDate", storeDetails.RegistrationDate),
                     new SqlParameter("activeStatus", storeDetails.ActiveStatus),
                 });
-                command.Connection = connection; 
+                command.Connection = connection;
                 command.ExecuteNonQuery();
             }
         }
     }
 }
+    

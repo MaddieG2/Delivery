@@ -1,4 +1,6 @@
-﻿using Delivery.APIService.Models;
+﻿using Delivery.APIService.DTO;
+using Delivery.APIService.Extensions;
+using Delivery.APIService.Models;
 using Delivery.Repository;
 using Delivery.Repository.DTO;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +16,13 @@ namespace Delivery.APIService
         public StoreService(IConfiguration configuration)
         {
             _configuration = configuration;
+        }
+
+        public List<StoreDetailAPIServiceDTO> GetStores(string city = "")
+        {
+            StoreRepositoryService StoreRepositoryService = new StoreRepositoryService(_configuration);
+            List<StoreDetailRepositoryDTO> stores = StoreRepositoryService.GetStores(city);
+            return stores.StoreDetailRepositoryDTOsToStoreDetailAPIServiceDTO();
         }
         public void RegisterStore(StoreDetail storeDetails)
         {
@@ -32,4 +41,4 @@ namespace Delivery.APIService
             storeRepositoryService.CreateStore(storeDetailObject);
         }
     }
-}
+   }
