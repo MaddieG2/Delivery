@@ -40,5 +40,17 @@ namespace Delivery.APIService
             StoreRepositoryService storeRepositoryService = new StoreRepositoryService(_configuration);
             storeRepositoryService.CreateStore(storeDetailObject);
         }
+        public bool DeleteStore(Guid id)
+        {
+            StoreRepositoryService StoreRepositoryService = new StoreRepositoryService(_configuration);
+
+            return StoreRepositoryService.DeleteStore(id);
+        }
+        public bool UpdateStore(StoreDetail storeDetail)
+        {
+            StoreRepositoryService StoreRepositoryService = new StoreRepositoryService(_configuration);
+
+            return StoreRepositoryService.UpdateStore(storeDetail.ToStoreDetailRepositoryDTO());
+        }
     }
-   }
+}
