@@ -1,4 +1,5 @@
 ﻿using Delivery.APIService.DTO;
+using Delivery.APIService.Models;
 using Delivery.Repository.DTO;
 using System;
 using System.Collections.Generic;
@@ -70,5 +71,18 @@ namespace Delivery.APIService.Extensions
                 }
                 return stores;
             }
+        public static StoreDetailRepositoryDTO ToStoreDetailRepositoryDTO(this StoreDetail storeDetail) 
+        {
+            return new StoreDetailRepositoryDTO()
+            {
+                PhoneNumber = storeDetail.PhoneNumber,
+                StoreId = storeDetail.StoreId,
+                City = storeDetail.Address.City,
+                State = storeDetail.Address.State,
+                Street = storeDetail.Address.Street,
+                ZipCode = storeDetail.Address.ZipCode,
+                StoreName = storeDetail.StoreName,
+            };
         }
+    }
 }

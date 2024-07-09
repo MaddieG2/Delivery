@@ -1,5 +1,6 @@
 ﻿using Delivery.Repository.DTO;
 using Microsoft.Extensions.Configuration;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -22,11 +23,11 @@ namespace Delivery.Repository
             string query = "";
             if(city != "")
             {
-                query = $"SELECT * FROM StoreDetails WHERE city = '{city}'";
+                query = $"SELECT * FROM StoreDetails WHERE city = '{city}' AND ActiveStatus = '1'";
             }
             else
             {
-                query = "SELECT * FROM StoreDetails";
+                query = "SELECT * FROM StoreDetails WHERE ActiveStatus = '1'";
             }
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -82,6 +83,64 @@ namespace Delivery.Repository
                 command.Connection = connection;
                 command.ExecuteNonQuery();
             }
+        }
+        public bool DeleteStore(Guid id)
+        {
+            var connectionString = _configuration.GetConnectionString("DeliveryDB");
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+               
+                SqlCommand command = new SqlCommand(
+                      @"UPDATE StoreDetails SET ActiveStatus = '0' WHERE StoreID = @storeId");
+
+                command.Parameters.Add(new SqlParameter("storeId", id));
+                command.Connection = connection;
+                command.ExecuteNonQuery();
+            }
+
+            return true;
+        }
+        public bool UpdateStore(StoreDetailRepositoryDTO storeDetail)
+        {
+            try
+            {
+                var connectionString = _configuration.GetConnectionString("DeliveryDB");
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    SqlCommand command = new SqlCommand(
+                      @"
+                    UPDATE StoreDetails 
+                    SET 
+                        PhoneNumber  = @phoneNumber,
+                        City = @city,
+                        State = @state,
+                        Street = @street,
+                        StoreName = @storeName
+                    WHERE StoreId = @storeId
+                  ");
+
+                    command.Parameters.Add(new SqlParameter("storeId", storeDetail.StoreId));
+                    command.Parameters.Add(new SqlParameter("phoneNumber", storeDetail.PhoneNumber));
+                    command.Parameters.Add(new SqlParameter("city", storeDetail.City));
+                    command.Parameters.Add(new SqlParameter("street", storeDetail.Street));
+                    command.Parameters.Add(new SqlParameter("state", storeDetail.State));
+                    command.Parameters.Add(new SqlParameter("storeName", storeDetail.StoreName));
+
+                    command.Connection = connection;
+                    command.ExecuteNonQuery();
+                }
+            }            
+            catch (Exception ex)
+            {
+                return false;
+            }
+           
+            return true;
         }
     }
 }
